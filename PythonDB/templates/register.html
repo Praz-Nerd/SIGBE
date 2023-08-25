@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Register</h2>
+        <form action="/register" method="post">
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Username" required><br>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <input type="email" name="email" placeholder="Email" required><br>
+                <input type="text" name="nume" placeholder="Nume" required><br>
+                <input type="text" name="prenume" placeholder="Prenume" required><br>
+                <label for="data_nasterii">Data nasterii</label>
+                <input type="date" name="data_nasterii" placeholder="Data Nasterii" required><br>
+                <input type="text" name="cnp" placeholder="CNP" required><br>
+                <button class="login-button" type="submit">Register</button>
+            </div>
+        </form>
+        {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
+        {% if success_message %}
+        <p style="color: green;">{{ success_message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

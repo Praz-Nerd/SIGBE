@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .file-upload {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Welcome to the Dashboard</h2>
+    <p>Hello, {{ username }}!</p>
+    <p>This is your dashboard content:</p>
+    <table>
+        <tr>
+            <td>Nume</td>
+            <td>Prenume</td>
+            <td>Data Nasterii</td>
+            <td>CNP</td>
+        </tr>
+        <tr>
+            <td>{{nume}}</td>
+            <td>{{prenume}}</td>
+            <td>{{data_nasterii}}</td>
+            <td>{{cnp}}</td>
+        </tr>
+    </table>
+    <p>What would you like to do next?</p>
+    <div>
+        <button id="upload-button">Upload files</button>
+        <button id="check-files-button">Check files</button>
+        <div id="upload-container" class="file-upload">
+            <form action="{{ url_for('upload', pk=pk) }} "method="POST" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <button type="submit">Upload File</button>
+            </form>
+        </div>
+        <div id="check-container" class="file-upload">
+            <p>Your files are here!</p>
+        </div>
+    </div>
+    <script>
+        const showUploadButton = document.getElementById('upload-button');
+        const uploadContainer = document.getElementById('upload-container');
+        const showCheckButton = document.getElementById('check-files-button');
+        const checkContainer = document.getElementById('check-container');
+
+        showUploadButton.addEventListener('click', () => {
+            if(uploadContainer.style.display == 'block'){
+                checkContainer.style.display = 'none';
+                uploadContainer.style.display = 'none';
+            }  
+            else{
+                checkContainer.style.display = 'none';
+                uploadContainer.style.display = 'block';
+            }   
+        });
+
+        showCheckButton.addEventListener('click', () =>{
+            if(checkContainer.style.display == 'block'){
+                checkContainer.style.display = 'none';
+                uploadContainer.style.display = 'none';
+            }
+            else{
+                uploadContainer.style.display = 'none';
+                checkContainer.style.display = 'block';
+            }
+        })
+    </script>
+    <p><a href="/logout">Logout</a></p>
+</body>
+</html>
