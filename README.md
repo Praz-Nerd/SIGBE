@@ -17,6 +17,5 @@ CREATE TABLE elevi(
 CREATE TABLE fisiere (
 	id SERIAL PRIMARY KEY,
 	filename TEXT NOT NULL,
-	data BYTEA NOT NULL,
 	elev_id INT REFERENCES elevi(id)
 )
