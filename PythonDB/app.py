@@ -71,8 +71,10 @@ def register():
 @app.route('/dashboard/<int:pk>',methods=['GET','POST'])
 def dashboard(pk):
     user = DB.return_user(pk)
+    file_list = DB.check_files(pk)
     return render_template('dashboard.html', 
-                               username = str(user[1]), nume = str(user[4]), prenume = str(user[5]), data_nasterii = str(user[6]), cnp = str(user[7]), pk=pk)
+                               username = str(user[1]), nume = str(user[4]), prenume = str(user[5]), 
+                               data_nasterii = str(user[6]), cnp = str(user[7]), pk=pk, file_list=file_list)
 
 
 @app.route('/upload/<int:pk>', methods=['POST'])
@@ -88,6 +90,7 @@ def upload(pk):
     connection.commit()
     return redirect(url_for('dashboard', pk=pk))
 
+#@app.route('/check_files/<int:pk>', methods=['POST'])
 
 
 
