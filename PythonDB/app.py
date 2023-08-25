@@ -12,7 +12,6 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
 
-
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -21,19 +20,12 @@ def index():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-
-    connection = DB.connect_to()
-    cursor = connection.cursor()
-
     # Retrieve user from database
-    cursor.execute('SELECT * FROM elevi WHERE username = %s', (username,))
-    user = cursor.fetchone()
-    print(user)
-    if user is None or str(user[2]) != password:
-        error_message = "Incorrect username or password."
-        return render_template('index.html', error_message=error_message)
+    validation = DB.login_validation(username, password)
+    if validation[0] == False:
+        return render_template('index.html', error_message=validation[1])
     else:
-         return redirect(url_for('dashboard', pk = user[0]))
+        return redirect(url_for('dashboard', pk = validation[2][0]))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -47,25 +39,19 @@ def register():
         data_nasterii = request.form.get('data_nasterii')
         cnp = request.form.get('cnp')
 
-        connection = DB.connect_to()
-        cursor = connection.cursor()
 
-        # Check if username already exists in the database
-        cursor.execute('SELECT * FROM elevi WHERE username = %s', (username,))
-        existing_user = cursor.fetchone()
-
-        if existing_user:
-            error_message = "Username already exists."
-            return render_template('register.html', error_message=error_message)
-
-        # Insert new user into the database
-        cursor.execute('INSERT INTO elevi (username, password, email, nume, prenume, data_nasterii, cnp) VALUES (%s, %s, %s, %s, %s, %s, %s)', 
-                       (username, password, email, nume, prenume, data_nasterii, cnp,))
-        connection.commit()
-
-        success_message = "Registration successful! You can now log in."
-        return render_template('index.html', success_message=success_message)
-
+        validation = DB.register_validation(username, password, nume, prenume, data_nasterii, cnp)
+        
+        if validation[0] == False:
+            return render_template('register.html', error_message=validation[1])
+        else:
+            validation = DB.create_user(username, password, email, 
+                                            nume, prenume, data_nasterii, cnp)
+            if validation[0] == True:
+                return render_template('index.html', success_message=validation[1])
+            else:
+                err = validation[1]+validation[2]
+                return err
     return render_template('register.html')
 
 @app.route('/dashboard/<int:pk>',methods=['GET','POST'])
@@ -76,22 +62,19 @@ def dashboard(pk):
                                username = str(user[1]), nume = str(user[4]), prenume = str(user[5]), 
                                data_nasterii = str(user[6]), cnp = str(user[7]), pk=pk, file_list=file_list)
 
-
 @app.route('/upload/<int:pk>', methods=['POST'])
 def upload(pk):
-    print(pk)
     file = request.files['file']
-    filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-    file.save(filename)
-    connection = DB.connect_to()
-    cursor = connection.cursor()
-    cursor.execute('INSERT INTO fisiere (filename, elev_id, filepath) VALUES (%s, %s, %s)', 
-                   (os.path.basename(filename), pk, filename))
-    connection.commit()
-    return redirect(url_for('dashboard', pk=pk))
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(filepath)
+    validation = DB.upload_file(file.filename, filepath, pk)
 
-#@app.route('/check_files/<int:pk>', methods=['POST'])
-
+    if validation[0] == False:
+        err = validation[1]+validation[2]
+        return err
+    else:
+        print(validation[1])
+        return redirect(url_for('dashboard', pk=pk))
 
 
 @app.route('/logout')
