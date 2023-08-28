@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
   }
-  .login-container {
+  .login-container{
     width: 300px;
     margin: 100px auto;
     padding: 20px;
@@ -12,6 +12,14 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  .dashboard-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .login-container h2 {
     text-align: center;
@@ -47,7 +55,28 @@ body {
     transition: background-color 0.3s;
     margin-top: 15px;
   }
+
+  .dashboard-button {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    margin-top: 15px;
+  }
   
-  .login-button:hover {
+  .login-button:hover, .dashboard-button:hover {
     background-color: #0056b3;
   }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}

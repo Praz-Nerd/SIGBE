@@ -61,7 +61,7 @@ def register_validation(username, password, nume, prenume, data_nasterii, cnp):
     if datetime.fromisoformat(data_nasterii).date() > datetime.today().date():
         return [False, "Invalid birth date"]
     #cnp validation
-    if len(cnp) != 13 or cnp[0] != '1' or cnp[0] != '2' or cnp[0] != '5' or cnp[0] != '6':
+    if len(cnp) != 13:
         return [False, "Invalid CNP"]    
     cursor.close()
     connection.close()

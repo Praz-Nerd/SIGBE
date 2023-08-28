@@ -14,7 +14,7 @@
 <body>
     <h2>Welcome to the Dashboard</h2>
     <p>Hello, {{ username }}!</p>
-    <p>This is your dashboard content:</p>
+    <p>This is your database content:</p>
     <table>
         <tr>
             <td>Nume</td>
@@ -29,10 +29,10 @@
             <td>{{cnp}}</td>
         </tr>
     </table>
-    <p>What would you like to do next?</p>
-    <div>
-        <button id="upload-button">Upload files</button>
-        <button type="submit" id="check-files-button">Check files</button>
+    <div class="dashboard-container">
+        <p>What would you like to do next?</p>
+        <button class="dashboard-button" id="upload-button">Upload files</button>
+        <button class="dashboard-button" type="submit" id="check-files-button">Check files</button>
         <div id="upload-container" class="file-upload">
             <form action="{{ url_for('upload', pk=pk) }}" method="POST" enctype="multipart/form-data">
                 <input type="file" name="file">
@@ -76,6 +76,12 @@
             }
         })
     </script>
+    {% if error_message %}
+    <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+    {% if success_message %}
+    <p style="color: green;">{{ success_message }}</p>
+    {% endif %}
     <p><a href="/logout">Logout</a></p>
 </body>
 </html>

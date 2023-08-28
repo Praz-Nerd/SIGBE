@@ -64,17 +64,20 @@ def dashboard(pk):
 
 @app.route('/upload/<int:pk>', methods=['POST'])
 def upload(pk):
-    file = request.files['file']
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-    file.save(filepath)
-    validation = DB.upload_file(file.filename, filepath, pk)
+    try:
+        file = request.files['file']
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filepath)
+        validation = DB.upload_file(file.filename, filepath, pk)
 
-    if validation[0] == False:
-        err = validation[1]+validation[2]
-        return err
-    else:
-        print(validation[1])
-        return redirect(url_for('dashboard', pk=pk))
+        if validation[0] == False:
+            err = validation[1]+validation[2]
+            return err
+        else:
+            print(validation[1])
+            return redirect(url_for('dashboard', pk=pk))
+    except:
+       return "No file selected..."
 
 
 @app.route('/logout')
