@@ -41,11 +41,15 @@
             </form>
         </div>
         <div id="check-container" class="file-upload">
-            <p>Your uploaded files:</p>
             <ul>
-                {% for file in file_list %}
-                    <li>{{ file[0] }}</li>
-                {% endfor %}
+                {% if not file_list %}
+                    <p>No files uploaded, use the upload files button to start</p>
+                {% else %}
+                    <p>Your uploaded files:</p>
+                    {% for file in file_list %}
+                        <li>{{ file[0] }}</li>
+                    {% endfor %}
+                {% endif %}
             </ul>
         </div>
     </div>

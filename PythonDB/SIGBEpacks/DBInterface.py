@@ -53,6 +53,8 @@ def register_validation(username, password, nume, prenume, data_nasterii, cnp, p
         return [False, "Password already used"]
     if len(password) < 8:
         return [False, "Password is too short"]
+    if (not has_special_char(password)) or (not has_number(password)):
+        return [False, "Password should have at least a number and a special character"]
     #email validation is done in html
     #nume validation
     if has_number(nume) or has_special_char(nume):

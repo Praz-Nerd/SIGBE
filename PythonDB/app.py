@@ -3,7 +3,6 @@ from SIGBEpacks import DBInterface as DB
 import os
 from psycopg2 import Binary
 
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'PythonDB/static/uploads'
 
@@ -42,7 +41,6 @@ def register():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], photo.filename)
         photo.save(filepath)
 
-
         validation = DB.register_validation(username, password, nume, prenume, data_nasterii, cnp, photo.filename)
         
         if validation[0] == False:
@@ -57,7 +55,6 @@ def register():
                 return err
     return render_template('register.html')
     
-
 @app.route('/dashboard/<int:pk>',methods=['GET','POST'])
 def dashboard(pk):
     user = DB.return_user(pk)
@@ -83,7 +80,6 @@ def upload(pk):
             return redirect(url_for('dashboard', pk=pk))
     except:
        return "No file selected..."
-
 
 @app.route('/logout')
 def logout():
