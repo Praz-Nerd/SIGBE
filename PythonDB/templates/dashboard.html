@@ -13,6 +13,7 @@
 </head>
 <body>
     <h2>Welcome to the Dashboard</h2>
+    <img src= {{ filepath }} alt="Your photo" width="300" height="300">
     <p>Hello, {{ username }}!</p>
     <p>This is your database content:</p>
     <table>
@@ -43,7 +44,7 @@
             <p>Your uploaded files:</p>
             <ul>
                 {% for file in file_list %}
-                    <li>{{ file[1] }}</li>
+                    <li>{{ file[0] }}</li>
                 {% endfor %}
             </ul>
         </div>

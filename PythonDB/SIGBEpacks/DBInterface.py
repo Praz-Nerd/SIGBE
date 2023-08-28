@@ -1,12 +1,19 @@
 import psycopg2
 from datetime import datetime
-#functii diverse pentru interactiunea cu baza de date
+#functii diverse pentru interactiunea cu baza de date/validarea datelor
 
 def has_number(input_string):
     return any(char.isdigit() for char in input_string)
 
 def has_special_char(input_string):
     return any(char in "!@#$%^&*()<>,./?;:" for char in input_string)
+
+def is_photo(photo_name):
+    substrings = [".jpg", ".gif", ".png"]
+    for substring in substrings:
+        if photo_name.endswith(substring):
+            return True
+    return False
 
 def connect_to():
     return psycopg2.connect(
@@ -31,7 +38,7 @@ def login_validation(username, password):
     else:
         return [True, "Login successful", user]
 
-def register_validation(username, password, nume, prenume, data_nasterii, cnp):
+def register_validation(username, password, nume, prenume, data_nasterii, cnp, photo_name):
     connection = connect_to()
     cursor = connection.cursor()
     #username validation
@@ -62,17 +69,20 @@ def register_validation(username, password, nume, prenume, data_nasterii, cnp):
         return [False, "Invalid birth date"]
     #cnp validation
     if len(cnp) != 13:
-        return [False, "Invalid CNP"]    
+        return [False, "Invalid CNP"]
+    #photo validation
+    if not is_photo(photo_name):
+        return [False, "Invalid photo type"]    
     cursor.close()
     connection.close()
     return [True, "User can be created"]
     
-def create_user(username, password, email, nume, prenume, data_nasterii, cnp):
+def create_user(username, password, email, nume, prenume, data_nasterii, cnp, photo_path):
     try:
         connection = connect_to()
         cursor = connection.cursor()
-        cursor.execute('INSERT INTO elevi (username, password, email, nume, prenume, data_nasterii, cnp) VALUES (%s, %s, %s, %s, %s, %s, %s)', 
-                       (username, password, email, nume, prenume, data_nasterii, cnp,))
+        cursor.execute('INSERT INTO elevi (username, password, email, nume, prenume, data_nasterii, cnp, photo_filepath) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)', 
+                       (username, password, email, nume, prenume, data_nasterii, cnp, photo_path,))
         connection.commit()
         cursor.close()
         connection.close()
@@ -106,10 +116,8 @@ def upload_file(filename, filepath, pk):
 def check_files(pk):
     connection = connect_to()
     cursor = connection.cursor()
-    cursor.execute('SELECT * FROM fisiere WHERE elev_id = %s', (pk,))
+    cursor.execute('SELECT filename FROM fisiere WHERE elev_id = %s', (pk,))
     file_list = cursor.fetchall()
-    for file in file_list:
-        print(file[3])
     cursor.close()
     connection.close()
     return file_list
